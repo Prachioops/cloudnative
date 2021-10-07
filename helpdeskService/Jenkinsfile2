@@ -1,0 +1,46 @@
+pipeline{
+       agent any 
+               stages {
+               	stage('One'){
+                     steps{
+                         echo 'Hello 2'
+                     }
+               }
+               	stage('Two'){
+                     steps{
+                         input('Hello this is jenkins 2')
+                     }
+              }
+               	stage('Three'){
+                     when{
+                        not{
+                        branch"master"
+                        }
+                     }
+                     steps{
+                     echo "Hello 2 everyone"
+                     }
+               }
+               	stage('Four'){
+                             parallel{
+                                 stage('Unit Test'){
+                                            steps{
+                                            echo "Running the unit test 2..."
+                                          }
+                                 }
+                                 stage('Integration test'){
+                                     agent{
+                                       any{
+                                       reuseNode false
+                                       image 'ubuntu'
+                                       }
+                                     }
+                                     steps {
+                                     echo 'Running the integration test 2..'
+                                     }
+                                 }
+                             }
+                          } 
+         }
+           
+}
